@@ -1,10 +1,14 @@
 import { Action } from 'redux';
-import { REGISTER_USER, REGISTER_USER_FAILED } from '../types/userTypes';
+import {
+	REGISTER_USER,
+	REGISTER_USER_FAILED,
+	LOGINING_USER,
+	LOGIN_USER_FAILED,
+} from '../types/userTypes';
 
 const initState = {
 	isAuthenticated: false,
-	user: null,
-	error: null,
+	status: 400,
 };
 
 interface IAction extends Action {
@@ -15,17 +19,25 @@ interface IAction extends Action {
 const authReducer = (state = initState, action: IAction) => {
 	switch (action.type) {
 		case REGISTER_USER:
-			return {
-				...state,
-				isAuthenticated: true,
-				user: action.payload.user,
-			};
+			if (action.payload.status === 200) {
+				return {
+					...state,
+					isAuthenticated: true,
+				};
+			}
+			return state;
 		case REGISTER_USER_FAILED:
 			return {
 				...state,
 				isAuthenticated: false,
-				error: action.payload.error,
 			};
+		case LOGINING_USER:
+			if (action.payload.status === 200) {
+				return { ...state, isAuthenticated: true };
+			}
+			return state;
+		case LOGIN_USER_FAILED:
+			return { ...state, isAuthenticated: false };
 		default:
 			return state;
 	}

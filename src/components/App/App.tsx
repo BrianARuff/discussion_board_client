@@ -43,7 +43,13 @@ function App(props: any) {
 					<Route
 						exact
 						path="/dashboard"
-						render={(props) => <Dashboard {...props} />}
+						render={(props) =>
+							isAuthenticated ? (
+								<Dashboard {...props} />
+							) : (
+								<Redirect to="login" />
+							)
+						}
 					/>
 				</Switch>
 			</Router>
